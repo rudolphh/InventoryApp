@@ -1,4 +1,4 @@
 package inventory.controller;
 
-public class Controller {
+public class Parts {
 }
