@@ -1,23 +1,13 @@
 package inventory.controller;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import javafx.fxml.Initializable;
 
-public class Main extends Application {
+import java.net.URL;
+import java.util.ResourceBundle;
 
+public class Main implements Initializable {
     @Override
-    public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("../view/main.fxml"));
-        primaryStage.setTitle("Company Inventory");
-        primaryStage.setScene(new Scene(root, 300, 275));
-        primaryStage.show();
-    }
+    public void initialize(URL location, ResourceBundle resources) {
 
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }
