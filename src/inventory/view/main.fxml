@@ -12,8 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane minHeight="500.0" minWidth="980.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="inventory.controller.Main">
+<AnchorPane minHeight="500.0" minWidth="980.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.controller.Main">
    <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <Label text="Inventory Management System">
          <font>
@@ -48,7 +47,7 @@
                </TextField>
                <Button id="searchPartsBtn" fx:id="searchPartBtn" minWidth="80.0" mnemonicParsing="false" style="-fx-background-color: black;" text="Search" textAlignment="RIGHT" textFill="WHITE" />
             </HBox>
-            <TableView VBox.vgrow="ALWAYS">
+            <TableView fx:id="partsListTableView" VBox.vgrow="ALWAYS">
                <columns>
                   <TableColumn id="col_partID" fx:id="partIDCol" maxWidth="312.0" minWidth="116.0" prefWidth="-1.0" text="Part ID" />
                   <TableColumn id="col_partName" maxWidth="312.0" minWidth="116.0" prefWidth="-1.0" text="Name" />
@@ -91,7 +90,7 @@
                </TextField>
                <Button id="searchProdBtn" fx:id="searchProdBtn" minWidth="80.0" mnemonicParsing="false" style="-fx-background-color: black;" text="Search" textAlignment="RIGHT" textFill="WHITE" />
             </HBox>
-            <TableView VBox.vgrow="ALWAYS">
+            <TableView fx:id="productsListTableView" VBox.vgrow="ALWAYS">
                <columns>
                   <TableColumn id="col_prodID" maxWidth="312.0" minWidth="116.0" prefWidth="-1.0" text="Product ID" />
                   <TableColumn id="col_prodName" maxWidth="312.0" minWidth="116.0" prefWidth="-1.0" text="Name" />

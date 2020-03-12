@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
 public class Main implements Initializable {
@@ -15,6 +16,9 @@ public class Main implements Initializable {
 
     @FXML
     private Button searchPartBtn;
+
+    @FXML
+    private TableView<?> partsListTableView;
 
     @FXML
     private TableColumn<?, ?> partIDCol;
@@ -42,6 +46,9 @@ public class Main implements Initializable {
 
     @FXML
     private Button searchProdBtn;
+
+    @FXML
+    private TableView<?> productsListTableView;
 
     @FXML
     private TableColumn<?, ?> prodIDCol;
