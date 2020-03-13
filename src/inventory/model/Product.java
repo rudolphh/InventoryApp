@@ -4,6 +4,7 @@ import javafx.collections.ObservableList;
 
 public class Product {
 
+// properties
     ObservableList<Part> associatedParts;
     int id;
     String name;
@@ -12,8 +13,10 @@ public class Product {
     int min;
     int max;
 
+// constructor
     Product(int id, String name, double price, int stock, int min, int max) { }
 
+// methods
     public int getId() {
         return id;
     }
@@ -69,4 +72,5 @@ public class Product {
     public void addAssociatedPart(Part aPart) { }
     public boolean deleteAssociatedPart(Part selectedAsPart){ return true; }
     public ObservableList<Part> getAllAssociatedParts(){ return null; }
+
 }

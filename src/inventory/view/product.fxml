@@ -17,7 +17,7 @@
 
             <AnchorPane prefWidth="350.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
 
-                  <Label layoutX="107.0" layoutY="60.0" text="Create Product">
+                  <Label fx:id="productScreenLabel" layoutX="107.0" layoutY="60.0" text="Create Product">
                      <font>
                         <Font name="System Bold Italic" size="16.0" />
                      </font>

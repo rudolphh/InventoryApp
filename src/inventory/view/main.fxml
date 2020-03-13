@@ -45,7 +45,7 @@
                      <Insets />
                   </HBox.margin>
                </TextField>
-               <Button id="searchPartsBtn" fx:id="searchPartBtn" minWidth="80.0" mnemonicParsing="false" style="-fx-background-color: black;" text="Search" textAlignment="RIGHT" textFill="WHITE" />
+               <Button id="searchPartsBtn" fx:id="searchPartBtn" minWidth="80.0" mnemonicParsing="false" onAction="#clickSearchPart" style="-fx-background-color: black;" text="Search" textAlignment="RIGHT" textFill="WHITE" />
             </HBox>
             <TableView fx:id="partsListTableView" VBox.vgrow="ALWAYS">
                <columns>
@@ -65,10 +65,10 @@
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
-               <Button id="partAddBtn" fx:id="partAddBtn" minWidth="80.0" mnemonicParsing="false" style="-fx-background-color: black;" text="Add" textFill="WHITE" />
-               <Button id="partModBtn" fx:id="partModBtn" minWidth="80.0" mnemonicParsing="false" style="-fx-background-color: black;" text="Modify" textFill="WHITE" />
+               <Button id="partAddBtn" fx:id="partAddBtn" minWidth="80.0" mnemonicParsing="false" onAction="#clickAddPart" style="-fx-background-color: black;" text="Add" textFill="WHITE" />
+               <Button id="partModBtn" fx:id="partModBtn" minWidth="80.0" mnemonicParsing="false" onAction="#clickModPart" style="-fx-background-color: black;" text="Modify" textFill="WHITE" />
                <Region HBox.hgrow="ALWAYS" />
-               <Button id="partDelBtn" fx:id="partDelBtn" minWidth="80.0" mnemonicParsing="false" style="-fx-background-color: black;" text="Delete" textFill="WHITE" />
+               <Button id="partDelBtn" fx:id="partDelBtn" minWidth="80.0" mnemonicParsing="false" onAction="#clickDelPart" style="-fx-background-color: black;" text="Delete" textFill="WHITE" />
             </HBox>
          </VBox>
          <Region maxWidth="20.0" minWidth="20.0" HBox.hgrow="ALWAYS" />
@@ -88,7 +88,7 @@
                      <Insets />
                   </HBox.margin>
                </TextField>
-               <Button id="searchProdBtn" fx:id="searchProdBtn" minWidth="80.0" mnemonicParsing="false" style="-fx-background-color: black;" text="Search" textAlignment="RIGHT" textFill="WHITE" />
+               <Button id="searchProdBtn" fx:id="searchProdBtn" minWidth="80.0" mnemonicParsing="false" onAction="#clickSearchProd" style="-fx-background-color: black;" text="Search" textAlignment="RIGHT" textFill="WHITE" />
             </HBox>
             <TableView fx:id="productsListTableView" VBox.vgrow="ALWAYS">
                <columns>
@@ -105,10 +105,10 @@
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
-               <Button id="prodAddBtn" fx:id="prodAddBtn" minWidth="80.0" mnemonicParsing="false" style="-fx-background-color: black;" text="Add" textFill="WHITE" />
-               <Button id="prodModBtn" fx:id="prodModBtn" minWidth="80.0" mnemonicParsing="false" style="-fx-background-color: black;" text="Modify" textFill="WHITE" />
+               <Button id="prodAddBtn" fx:id="prodAddBtn" minWidth="80.0" mnemonicParsing="false" onAction="#clickAddProd" style="-fx-background-color: black;" text="Add" textFill="WHITE" />
+               <Button id="prodModBtn" fx:id="prodModBtn" minWidth="80.0" mnemonicParsing="false" onAction="#clickModProd" style="-fx-background-color: black;" text="Modify" textFill="WHITE" />
                <Region HBox.hgrow="ALWAYS" />
-               <Button id="prodDelBtn" fx:id="prodDelBtn" minWidth="80.0" mnemonicParsing="false" style="-fx-background-color: black;" text="Delete" textFill="WHITE" />
+               <Button id="prodDelBtn" fx:id="prodDelBtn" minWidth="80.0" mnemonicParsing="false" onAction="#clickDelProd" style="-fx-background-color: black;" text="Delete" textFill="WHITE" />
             </HBox>
          </VBox>
       </HBox>
@@ -116,7 +116,7 @@
          <padding>
             <Insets bottom="20.0" right="25.0" />
          </padding>
-         <Button id="exitBtn" fx:id="exitBtn" minWidth="80.0" mnemonicParsing="false" text="Exit" />
+         <Button id="exitBtn" fx:id="exitBtn" minWidth="80.0" mnemonicParsing="false" onAction="#clickExit" text="Exit" />
       </HBox>
    </VBox>
 </AnchorPane>

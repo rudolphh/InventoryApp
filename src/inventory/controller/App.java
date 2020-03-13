@@ -16,11 +16,10 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception{
 
         //System.out.println("javafx.runtime.version: " + System.getProperty("javafx.runtime.version"));
-        Parent root = FXMLLoader.load(getClass().getResource("../view/product.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("../view/main.fxml"));
         primaryStage.setTitle("Inventory Management System");
-        primaryStage.setMinHeight(500);// 420 for main
+        primaryStage.setMinHeight(420);// 420 for main
         primaryStage.setMinWidth(996);
-        //primaryStage.setResizable(false);// for add/modify screens
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
 
@@ -31,3 +30,9 @@ public class App extends Application {
         launch(args);
     }
 }
+
+
+// for product screen
+//  primaryStage.setMinHeight(500);
+
+//primaryStage.setResizable(false);// for add/modify part screens

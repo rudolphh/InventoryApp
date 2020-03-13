@@ -8,11 +8,15 @@ import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
 
 public class Products implements Initializable {
+
+    @FXML
+    private Label productScreenLabel;
 
     @FXML
     private TextField prodIDTextField;
@@ -55,4 +59,7 @@ public class Products implements Initializable {
 
     }
 
+    public void initScreenLabel(String labelText) {
+        productScreenLabel.setText(labelText);
+    }
 }

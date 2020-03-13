@@ -2,8 +2,10 @@ package inventory.model;
 
 public class OutsourcedPart extends Part{
 
+// properties
     private String companyName;
 
+// methods
     public String getCompanyName() {
         return companyName;
     }
