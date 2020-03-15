@@ -1,22 +1,32 @@
 package inventory.model;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Product {
 
 // properties
-    ObservableList<Part> associatedParts;
-    int id;
-    String name;
-    double price;
-    int stock;
-    int min;
-    int max;
+    private ObservableList<Part> associatedParts;
+    private int id;
+    private String name;
+    private double price;
+    private int stock;
+    private int min;
+    private int max;
 
 // constructor
-    Product(int id, String name, double price, int stock, int min, int max) { }
 
-// methods
+    public Product(int id, String name, double price, int stock, int min, int max) {
+        associatedParts = FXCollections.observableArrayList();
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.stock = stock;
+        this.min = min;
+        this.max = max;
+    }
+
+    // methods
     public int getId() {
         return id;
     }

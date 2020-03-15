@@ -6,13 +6,21 @@ public abstract class Part {
     private int id;
     private String name;
     private double price;
-    private int stock;
+    private int inventory;
     private int min;
     private int max;
 
 // Constructors
     public Part(){ }
-    public Part(int id, String name, double price, int stock, int min, int max){ }
+
+    public Part(int id, String name, double price, int inventory, int min, int max) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.inventory = inventory;
+        this.min = min;
+        this.max = max;
+    }
 
     public int getId() {
         return id;
@@ -38,12 +46,12 @@ public abstract class Part {
         this.price = price;
     }
 
-    public int getStock() {
-        return stock;
+    public int getInventory() {
+        return inventory;
     }
 
-    public void setStock(int stock) {
-        this.stock = stock;
+    public void setInventory(int inventory) {
+        this.inventory = inventory;
     }
 
     public int getMin() {

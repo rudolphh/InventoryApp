@@ -1,23 +1,28 @@
 package inventory.controller;
 
+import inventory.model.InHousePart;
+import inventory.model.Inventory;
 import inventory.model.Part;
 import inventory.model.Product;
 
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -90,6 +95,19 @@ public class Main implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        Inventory.addPart(new InHousePart(1, "Transmission", 299.00, 10, 1, 20, 20383));
+        Inventory.addPart(new InHousePart(2, "brakes", 99.00, 5, 3, 30, 205653));
+
+        //        System.out.println(Inventory.getAllParts().get(0).getName());
+
+        partIDCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        partNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        partInvCol.setCellValueFactory(new PropertyValueFactory<>("inventory"));
+        partCostCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+
+        partsListTableView.setItems(Inventory.getAllParts());
+
+        exitBtn.setCancelButton(true);
     }
 
 // Button Click Handlers for Main Screen (main.fxml)
@@ -121,6 +139,7 @@ public class Main implements Initializable {
             newWindow.setScene(new Scene(theParent));
 
             controller.initScreenLabel("Add Part");
+            controller.setInventoryIndex(-1);
             newWindow.show();
         } catch (Exception e){
             System.out.println("Cannot load add part window");
@@ -130,26 +149,63 @@ public class Main implements Initializable {
 
     public void clickModPart(ActionEvent actionEvent) {
 
-        try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/part.fxml"));
-            Parent theParent = loader.load();
-            Parts controller = loader.getController();
+        int selectedIndex = partsListTableView.getSelectionModel().getSelectedIndex();
 
-            Stage newWindow = new Stage();
-            newWindow.initModality(Modality.APPLICATION_MODAL);
-            newWindow.setTitle("Modify Product in Inventory");
-            newWindow.setResizable(false);// for add/modify part screens
-            newWindow.setScene(new Scene(theParent));
+        if(selectedIndex == -1){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Select Part");
+            alert.setHeaderText("No part selected");
+            alert.setContentText("You must select a part to modify");
 
-            controller.initScreenLabel("Modify Part");
-            newWindow.show();
-        } catch (Exception e){
-            System.out.println("Cannot load modify part window");
-            e.printStackTrace();
+            alert.showAndWait();
+        } else {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/part.fxml"));
+                Parent theParent = loader.load();
+                Parts controller = loader.getController();
+
+                Stage newWindow = new Stage();
+                newWindow.initModality(Modality.APPLICATION_MODAL);
+                newWindow.setTitle("Modify Product in Inventory");
+                newWindow.setResizable(false);// for add/modify part screens
+                newWindow.setScene(new Scene(theParent));
+
+                controller.initScreenLabel("Modify Part");
+                controller.setInventoryIndex(selectedIndex);
+                newWindow.show();
+            } catch (Exception e) {
+                System.out.println("Cannot load modify part window");
+                e.printStackTrace();
+            }
         }
     }
 
     public void clickDelPart(ActionEvent actionEvent) {
+
+        int selectedIndex = partsListTableView.getSelectionModel().getSelectedIndex();
+
+        if(selectedIndex == -1){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Select Part");
+            alert.setHeaderText("No part selected");
+            alert.setContentText("You must select a part to delete");
+
+            alert.showAndWait();
+        }
+        else {
+            String partName = Inventory.getAllParts().get(selectedIndex).getName();
+
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.setTitle("Delete " + partName);
+            alert.setHeaderText("Confirm Delete - Part : " + partName);
+            alert.setContentText("Are you sure you want to delete " + partName + "?\n\n");
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                Inventory.deletePart(partsListTableView.getItems().get(selectedIndex));
+            }
+        }
     }
 
 

@@ -59,7 +59,7 @@ public class Products implements Initializable {
 
     }
 
-    public void initScreenLabel(String labelText) {
+    void initScreenLabel(String labelText) {
         productScreenLabel.setText(labelText);
     }
 }
