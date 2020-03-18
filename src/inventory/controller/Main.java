@@ -5,9 +5,9 @@ import inventory.model.Inventory;
 import inventory.model.Part;
 import inventory.model.Product;
 
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -22,7 +22,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseButton;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -92,6 +92,8 @@ public class Main implements Initializable {
     @FXML
     private Button exitBtn;
 
+    private FilteredList<Part> partFilteredList;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -105,9 +107,50 @@ public class Main implements Initializable {
         partInvCol.setCellValueFactory(new PropertyValueFactory<>("inventory"));
         partCostCol.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-        partsListTableView.setItems(Inventory.getAllParts());
+        ObservableList<Part> allParts = Inventory.getAllParts();
+        partsListTableView.setItems(allParts);
+
+        // set up search functionality
+        partFilteredList = new FilteredList<>(allParts, b-> true);
+        SortedList<Part> sortedPartList = new SortedList<>(partFilteredList);
+        sortedPartList.comparatorProperty().bind(partsListTableView.comparatorProperty());
+        partsListTableView.setItems(sortedPartList);
+
+        // set up search textField handlers (enter key)
+        searchPartTextField.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)  {
+                searchPart();
+            }
+        });
+
+        searchProdTextField.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)  {
+                searchProduct();
+            }
+        });
 
         exitBtn.setCancelButton(true);
+    }
+
+
+    private void searchPart() {
+
+        String newValue = searchPartTextField.getText();
+        System.out.println(newValue);
+        partFilteredList.setPredicate(part -> {
+
+            if(newValue == null || newValue.isEmpty()){
+                return true;
+            }
+
+            String lowerCaseFilter = newValue.toLowerCase();
+            if(part.getName().toLowerCase().contains(lowerCaseFilter)){
+                return true;
+            } else return String.valueOf(part.getId()).contains(lowerCaseFilter);
+        });
+    }
+
+    private void searchProduct() {
     }
 
 // Button Click Handlers for Main Screen (main.fxml)
@@ -122,6 +165,7 @@ public class Main implements Initializable {
 
     // Click Handlers for Part Buttons on Main Screen
     public void clickSearchPart(ActionEvent actionEvent) {
+        searchPart();
     }
 
     @FXML
@@ -134,12 +178,12 @@ public class Main implements Initializable {
 
             Stage newWindow = new Stage();
             newWindow.initModality(Modality.APPLICATION_MODAL);
-            newWindow.setTitle("Add Product to Inventory");
+            newWindow.setTitle("Add Part to Inventory");
             newWindow.setResizable(false);// for add/modify part screens
             newWindow.setScene(new Scene(theParent));
 
             controller.initScreenLabel("Add Part");
-            controller.setInventoryIndex(-1);
+            controller.initializeFieldData();
             newWindow.show();
         } catch (Exception e){
             System.out.println("Cannot load add part window");
@@ -149,14 +193,13 @@ public class Main implements Initializable {
 
     public void clickModPart(ActionEvent actionEvent) {
 
-        int selectedIndex = partsListTableView.getSelectionModel().getSelectedIndex();
+        Part thePart = partsListTableView.getSelectionModel().getSelectedItem();
 
-        if(selectedIndex == -1){
+        if(thePart == null){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Select Part");
             alert.setHeaderText("No part selected");
             alert.setContentText("You must select a part to modify");
-
             alert.showAndWait();
         } else {
             try {
@@ -171,7 +214,8 @@ public class Main implements Initializable {
                 newWindow.setScene(new Scene(theParent));
 
                 controller.initScreenLabel("Modify Part");
-                controller.setInventoryIndex(selectedIndex);
+                controller.setPart(thePart);
+                controller.initializeFieldData();
                 newWindow.show();
             } catch (Exception e) {
                 System.out.println("Cannot load modify part window");
@@ -189,7 +233,6 @@ public class Main implements Initializable {
             alert.setTitle("Select Part");
             alert.setHeaderText("No part selected");
             alert.setContentText("You must select a part to delete");
-
             alert.showAndWait();
         }
         else {
@@ -211,15 +254,18 @@ public class Main implements Initializable {
 
     // Click Handlers for Product Buttons on Main Screen
     public void clickSearchProd(ActionEvent actionEvent) {
+
     }
 
     public void clickAddProd(ActionEvent actionEvent) {
+
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/product.fxml"));
             Parent theParent = loader.load();
             Products controller = loader.getController();
 
             Stage newWindow = new Stage();
+            newWindow.initModality(Modality.APPLICATION_MODAL);
             newWindow.setTitle("Add Product to Inventory");
             newWindow.setMinHeight(500);
             newWindow.setMinWidth(996);

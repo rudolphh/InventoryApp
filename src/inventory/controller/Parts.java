@@ -4,6 +4,7 @@ import inventory.model.InHousePart;
 import inventory.model.Inventory;
 import inventory.model.OutsourcedPart;
 import inventory.model.Part;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import java.net.URL;
@@ -65,10 +66,10 @@ public class Parts implements Initializable {
     private Button partCancelBtn;
 
     @FXML
-    private int selectedRowIndex = -1;
+    private Part selectedPart = null;
+    private int selectedPartInventoryIndex;
 
-
-//////////////////
+    //////////////////
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -76,12 +77,14 @@ public class Parts implements Initializable {
         partCancelBtn.setCancelButton(true);// fire button when 'esc' is pressed
     }
 
-    private void initializeFieldData(){
+    void initializeFieldData(){
 
-        if (selectedRowIndex == -1) {
-            partIDTextField.setText(Integer.toString(Inventory.totalParts()+1));
+        if (selectedPart == null) {
+            partIDTextField.setText(Integer.toString(Inventory.getCurrentPartID()));
         } else {
-            Part modPart = Inventory.getAllParts().get(selectedRowIndex);
+            ObservableList<Part> theList = Inventory.getAllParts();
+            this.selectedPartInventoryIndex = theList.indexOf(selectedPart);
+            Part modPart = theList.get(this.selectedPartInventoryIndex);
             partIDTextField.setText(Integer.toString(modPart.getId()));
             partNameTextField.setText(modPart.getName());
             partInvTextField.setText(Integer.toString(modPart.getInventory()));
@@ -113,12 +116,20 @@ public class Parts implements Initializable {
         partMacCoTextField.setPromptText("Name of Company");
     }
 
+
+    private void savePart(Part thePart){
+        boolean newPart = selectedPart == null;
+        if (newPart) { // create a new part
+            Inventory.addPart(thePart);
+        } else { // save the modified part
+            Inventory.updatePart(selectedPartInventoryIndex, thePart);
+        }
+    }
+
     public void clickSavePart(ActionEvent actionEvent) {
 
-        boolean newPart = selectedRowIndex == -1;
-
         // extract text from fields
-        int id = newPart ? Inventory.getAllParts().size()+1 : Integer.parseInt(partIDTextField.getText());
+        int id = Integer.parseInt(partIDTextField.getText());
 
         String partName = partNameTextField.getText();
         double partCost = Double.parseDouble(partCostTextField.getText());
@@ -127,31 +138,19 @@ public class Parts implements Initializable {
         int partMax = Integer.parseInt(partMaxTextField.getText());
         String partMacCo = partMacCoTextField.getText();// machine IDs can only be 9 digits (limitation of int)
 
-        if(inHouseRadioBtn.isSelected()){
-
-            if(true) { // do validation
-                if (newPart) { // create a new part
-                    Inventory.addPart(new InHousePart(id, partName, partCost, partInv, partMin, partMax,
-                            Integer.parseInt(partMacCo.trim())));
-                } else { // save the modified part
-                    Inventory.updatePart(selectedRowIndex, new InHousePart(id, partName, partCost, partInv, partMin, partMax,
-                            Integer.parseInt(partMacCo.trim())));
-                }
-                Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-                window.close();
-            } else { // dialog box
-
+        Part thePart;
+        if(true){ // all input is valid
+            if(inHouseRadioBtn.isSelected()){
+                thePart = new InHousePart(id, partName, partCost, partInv, partMin, partMax, Integer.parseInt(partMacCo.trim()));
+            } else {
+                thePart = new OutsourcedPart(id, partName, partCost, partInv, partMin, partMax, partMacCo.trim());
             }
+            savePart(thePart);
+            Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            window.close();
+        } else { //dialog box
 
-        } else if (outsourcedRadioBtn.isSelected()){
-
-            if(true) { // do validation
-                Inventory.addPart(new OutsourcedPart(id, partName, partCost, partInv, partMin, partMax, partMacCo));
-                Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-                window.close();
-            }
         }
-
 
     }
 
@@ -175,11 +174,8 @@ public class Parts implements Initializable {
         partScreenLabel.setText(labelText);
     }
 
-    void setInventoryIndex(int selectedRowIndex) {
-        this.selectedRowIndex = selectedRowIndex;
-        initializeFieldData();// initialize field data after
+    void setPart(Part thePart) {
+        this.selectedPart = thePart;
     }
-
-
 }// end Parts.java
 

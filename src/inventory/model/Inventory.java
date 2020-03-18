@@ -8,32 +8,27 @@ public class Inventory {
 // properties
     private static final ObservableList<Part> allParts = FXCollections.observableArrayList();
     private static final ObservableList<Product> allProducts = FXCollections.observableArrayList();
-    private static int currentPartID = 0;
-    private static int currentProductID = 0;
-
+    private static int currentPartID = 1;
+    private static int currentProductID = 1;
 
     public static int getCurrentPartID() {
         return currentPartID;
     }
-
-    public static void incCurrentPartID(int currentPartID) {
-        Inventory.currentPartID = currentPartID;
-    }
-
     public static int getCurrentProductID() {
         return currentProductID;
     }
 
-    public static void setCurrentProductID(int currentProductID) {
-        Inventory.currentProductID = currentProductID;
-    }
-
-
-
 // methods
     // create
-    public static void addPart(Part newPart){ allParts.add(newPart); }
-    public static void addProduct(Product newProduct){ allProducts.add(newProduct); }
+    public static void addPart(Part newPart){
+        allParts.add(newPart);
+        Inventory.currentPartID++;
+    }
+
+    public static void addProduct(Product newProduct){
+        allProducts.add(newProduct);
+        Inventory.currentProductID++;
+    }
 
     // read
     public static Part lookupPart(int partID){ return null;  }
