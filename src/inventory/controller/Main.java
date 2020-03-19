@@ -8,16 +8,16 @@ import inventory.model.Product;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-
-import java.io.IOException;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -32,9 +32,6 @@ public class Main implements Initializable {
 
     @FXML
     private TextField searchPartTextField;
-
-    @FXML
-    private Button searchPartBtn;
 
     @FXML
     private TableView<Part> partsListTableView;
@@ -52,19 +49,7 @@ public class Main implements Initializable {
     private TableColumn<Part, Double> partCostCol;
 
     @FXML
-    private Button partAddBtn;
-
-    @FXML
-    private Button partModBtn;
-
-    @FXML
-    private Button partDelBtn;
-
-    @FXML
     private TextField searchProdTextField;
-
-    @FXML
-    private Button searchProdBtn;
 
     @FXML
     private TableView<Product> productsListTableView;
@@ -80,15 +65,6 @@ public class Main implements Initializable {
 
     @FXML
     private TableColumn<Product, Double> prodCostCol;
-
-    @FXML
-    private Button prodAddBtn;
-
-    @FXML
-    private Button prodModBtn;
-
-    @FXML
-    private Button prodDelBtn;
 
     @FXML
     private Button exitBtn;
@@ -128,66 +104,19 @@ public class Main implements Initializable {
         // set up search textField handlers (enter key)
         searchPartTextField.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER)  {
-                searchPart();
+                clickSearchPart(new ActionEvent());
             }
         });
 
         searchProdTextField.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER)  {
-                searchProduct();
+                clickSearchProd(new ActionEvent());
             }
         });
 
         exitBtn.setCancelButton(true);
     }
 
-    private void searchPart() {
-
-        String newValue = searchPartTextField.getText();
-
-        partFilteredList.setPredicate(part -> {
-
-            if(newValue == null || newValue.isEmpty()){
-                return true;
-            }
-
-            String lowerCaseFilter = newValue.toLowerCase();
-            if(part.getName().toLowerCase().contains(lowerCaseFilter)){
-                return true;
-            } else return String.valueOf(part.getId()).contains(lowerCaseFilter);
-        });
-    }
-
-    private void searchProduct() {
-        String newValue = searchProdTextField.getText();
-
-        prodFilteredList.setPredicate(part -> {
-
-            if(newValue == null || newValue.isEmpty()){
-                return true;
-            }
-
-            String lowerCaseFilter = newValue.toLowerCase();
-            if(part.getName().toLowerCase().contains(lowerCaseFilter)){
-                return true;
-            } else return String.valueOf(part.getId()).contains(lowerCaseFilter);
-        });
-    }
-
-// Button Click Handlers for Main Screen (main.fxml)
-
-    public void loadScreen(ActionEvent actionEvent, String screen) throws IOException {
-        Parent loader = FXMLLoader.load(getClass().getResource(screen));
-        Scene scene = new Scene(loader);
-        Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        window.setScene(scene);
-        window.show();
-    }
-
-    // Click Handlers for Part Buttons on Main Screen
-    public void clickSearchPart(ActionEvent actionEvent) {
-        searchPart();
-    }
 
     public void loadPartScreen(Part thePart, String title, String screenLabel, String exceptionMsg){
         try{
@@ -211,7 +140,50 @@ public class Main implements Initializable {
         }
     }
 
-    @FXML
+    private void loadProdScreen(Product theProduct, String title, String screenLabel, String exceptionMsg){
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/product.fxml"));
+            Parent theParent = loader.load();
+            Products controller = loader.getController();
+
+            Stage newWindow = new Stage();
+            newWindow.initModality(Modality.APPLICATION_MODAL);
+            newWindow.setTitle(title);
+            newWindow.setMinHeight(500);
+            newWindow.setMinWidth(996);
+            newWindow.setScene(new Scene(theParent));
+
+            controller.initScreenLabel(screenLabel);
+            controller.setProduct(theProduct);
+            controller.initializeFieldData();
+            newWindow.show();
+        } catch (Exception e){
+            System.out.println(exceptionMsg);
+            e.printStackTrace();
+        }
+    }
+
+
+// Button Click Handlers for Main Screen (main.fxml)
+
+    // Click Handlers for Part Buttons on Main Screen
+    public void clickSearchPart(ActionEvent actionEvent){
+        String newValue = searchPartTextField.getText();
+
+        partFilteredList.setPredicate(part -> {
+
+            if(newValue == null || newValue.isEmpty()){
+                return true;
+            }
+
+            String lowerCaseFilter = newValue.toLowerCase();
+            if(part.getName().toLowerCase().contains(lowerCaseFilter)){
+                return true;
+            } else return String.valueOf(part.getId()).contains(lowerCaseFilter);
+        });
+    }
+
     public void clickAddPart(ActionEvent actionEvent) {
         loadPartScreen(null, "Add Part to Inventory", "Add Part",
                 "Cannot load add part window");
@@ -251,35 +223,21 @@ public class Main implements Initializable {
         }
     }
 
-
     // Click Handlers for Product Buttons on Main Screen
     public void clickSearchProd(ActionEvent actionEvent) {
-        searchProduct();
-    }
+        String newValue = searchProdTextField.getText();
 
+        prodFilteredList.setPredicate(part -> {
 
-    private void loadProdScreen(Product theProduct, String title, String screenLabel, String exceptionMsg){
+            if(newValue == null || newValue.isEmpty()){
+                return true;
+            }
 
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/product.fxml"));
-            Parent theParent = loader.load();
-            Products controller = loader.getController();
-
-            Stage newWindow = new Stage();
-            newWindow.initModality(Modality.APPLICATION_MODAL);
-            newWindow.setTitle(title);
-            newWindow.setMinHeight(500);
-            newWindow.setMinWidth(996);
-            newWindow.setScene(new Scene(theParent));
-
-            controller.initScreenLabel(screenLabel);
-            controller.setProduct(theProduct);
-            controller.initializeFieldData();
-            newWindow.show();
-        } catch (Exception e){
-            System.out.println(exceptionMsg);
-            e.printStackTrace();
-        }
+            String lowerCaseFilter = newValue.toLowerCase();
+            if(part.getName().toLowerCase().contains(lowerCaseFilter)){
+                return true;
+            } else return String.valueOf(part.getId()).contains(lowerCaseFilter);
+        });
     }
 
     public void clickAddProd(ActionEvent actionEvent) {
@@ -325,14 +283,12 @@ public class Main implements Initializable {
                 "Exit Inventory Management System" , "Confirm Exit Application",
                 "Are you sure you want to exit the application?\n\n");
 
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            window.close();
-        }
+        if (result.isPresent() && result.get() == ButtonType.OK)
+            closeThisWindow(actionEvent);
     }
 
 
-    // For use in other controllers
+    // For use in all controllers
     static <T> void initializeColumns(TableColumn<T, Integer> idCol, TableColumn<T, String> nameCol,
                                       TableColumn<T, Integer> invCol, TableColumn<T, Double> costCol) {
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -364,6 +320,10 @@ public class Main implements Initializable {
         return alert.showAndWait();
     }
 
+    static void closeThisWindow(ActionEvent actionEvent){
+        Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        window.close();
+    }
 
 
 }// end Main

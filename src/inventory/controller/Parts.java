@@ -1,9 +1,7 @@
 package inventory.controller;
 
-import inventory.model.InHousePart;
-import inventory.model.Inventory;
-import inventory.model.OutsourcedPart;
-import inventory.model.Part;
+import inventory.model.*;
+
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -11,9 +9,8 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
+
 
 public class Parts implements Initializable {
 
@@ -22,9 +19,6 @@ public class Parts implements Initializable {
 
     @FXML
     private RadioButton inHouseRadioBtn;
-
-    @FXML
-    private ToggleGroup toggleGroup1;
 
     @FXML
     private RadioButton outsourcedRadioBtn;
@@ -49,11 +43,6 @@ public class Parts implements Initializable {
 
     @FXML
     private Label partMacCoLabel;
-
-    private final String machineIDLabel = "Machine ID";
-    private final String machineIDPrompt = "Machine Identifier";
-    private final String companyNameLabel = "Company";
-    private final String companyNamePrompt = "Company Name";
 
     @FXML
     private TextField partMacCoTextField;
@@ -83,39 +72,32 @@ public class Parts implements Initializable {
         } else {
             ObservableList<Part> theList = Inventory.getAllParts();
             this.selectedPartInventoryIndex = theList.indexOf(selectedPart);
-            Part modPart = theList.get(this.selectedPartInventoryIndex);
-            partIDTextField.setText(Integer.toString(modPart.getId()));
-            partNameTextField.setText(modPart.getName());
-            partInvTextField.setText(Integer.toString(modPart.getInventory()));
-            partCostTextField.setText(Double.toString(modPart.getPrice()));
-            partMinTextField.setText(Integer.toString(modPart.getMin()));
-            partMaxTextField.setText(Integer.toString(modPart.getMax()));
 
-            if(modPart instanceof InHousePart){
+            partIDTextField.setText(Integer.toString(selectedPart.getId()));
+            partNameTextField.setText(selectedPart.getName());
+            partInvTextField.setText(Integer.toString(selectedPart.getInventory()));
+            partCostTextField.setText(Double.toString(selectedPart.getPrice()));
+            partMinTextField.setText(Integer.toString(selectedPart.getMin()));
+            partMaxTextField.setText(Integer.toString(selectedPart.getMax()));
+
+            if(selectedPart instanceof InHousePart){
                 inHouseRadioBtn.setSelected(true);
-                partMacCoLabel.setText(machineIDLabel);
-                partMacCoTextField.setPromptText(machineIDPrompt);
-                partMacCoTextField.setText(Integer.toString(((InHousePart) modPart).getMachineID()));
-            } else if (modPart instanceof OutsourcedPart){
+                partMacCoLabel.setText("Machine ID");
+                partMacCoTextField.setPromptText("Machine Identifier");
+                partMacCoTextField.setText(Integer.toString(((InHousePart) selectedPart).getMachineID()));
+            } else if (selectedPart instanceof OutsourcedPart){
                 outsourcedRadioBtn.setSelected(true);
-                partMacCoLabel.setText(companyNameLabel);
-                partMacCoTextField.setPromptText(companyNamePrompt);
-                partMacCoTextField.setText(((OutsourcedPart) modPart).getCompanyName());
+                partMacCoLabel.setText("Company");
+                partMacCoTextField.setPromptText("Company Name");
+                partMacCoTextField.setText(((OutsourcedPart) selectedPart).getCompanyName());
             }
         }
     }
 
-    public void selectInHouse(ActionEvent actionEvent) {
-        partMacCoLabel.setText("Machine ID");
-        partMacCoTextField.setPromptText("Machine Identifier");
-    }
-
-    public void selectOutsourced(ActionEvent actionEvent) {
-        partMacCoLabel.setText("Company");
-        partMacCoTextField.setPromptText("Name of Company");
-    }
-
-
+    /***
+     * Save a part to the inventory (added or modified).
+     * @param thePart the part to be added or modified
+     */
     private void savePart(Part thePart){
         boolean newPart = selectedPart == null;
         if (newPart) { // create a new part
@@ -129,7 +111,6 @@ public class Parts implements Initializable {
 
         // extract text from fields
         int id = Integer.parseInt(partIDTextField.getText());
-
         String partName = partNameTextField.getText();
         double partCost = Double.parseDouble(partCostTextField.getText().isEmpty() ? "0" : partCostTextField.getText());
         int partInv = Integer.parseInt(partInvTextField.getText().isEmpty() ? "0" : partInvTextField.getText());
@@ -147,11 +128,8 @@ public class Parts implements Initializable {
                 thePart = new OutsourcedPart(id, partName, partCost, partInv, partMin, partMax, partMacCo.trim());
             }
             savePart(thePart);
-            Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            window.close();
-        // else { // validation failed dialog box
-
-        //}
+            Main.closeThisWindow(actionEvent);
+        // else { // validation failed dialog box }
 
     }
 
@@ -160,18 +138,34 @@ public class Parts implements Initializable {
                 "Cancel " + partScreenLabel.getText(), "Confirm cancel",
                 "Are you sure you want to cancel?\n\n");
 
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            window.close();
-        }
+        if (result.isPresent() && result.get() == ButtonType.OK)
+            Main.closeThisWindow(actionEvent);
     }
 
+    public void selectInHouse(ActionEvent actionEvent) {
+        partMacCoLabel.setText("Machine ID");
+        partMacCoTextField.setPromptText("Machine Identifier");
+    }
+
+    public void selectOutsourced(ActionEvent actionEvent) {
+        partMacCoLabel.setText("Company");
+        partMacCoTextField.setPromptText("Name of Company");
+    }
 
 //  controller methods for getting data from the outside
+
+    /***
+     *
+     * @param labelText the text to change the screens main label
+     */
     void initScreenLabel(String labelText) {
         partScreenLabel.setText(labelText);
     }
 
+    /***
+     * Pass the part selected from the main controller to parts controller
+     * @param thePart copy of the part selected from the main screen controller
+     */
     void setPart(Part thePart) {
         this.selectedPart = thePart;
     }

@@ -2,8 +2,7 @@ package inventory.model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nullable;
+
 
 public class Inventory {
 

@@ -1,23 +1,20 @@
 package inventory.controller;
 
 import inventory.model.*;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.ActionEvent;
-import javafx.fxml.Initializable;
 
+import javafx.event.ActionEvent;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
-
 import javafx.fxml.FXML;
-import javafx.scene.Node;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.stage.Stage;
 
 
 public class Products implements Initializable {
@@ -47,9 +44,6 @@ public class Products implements Initializable {
     private TextField searchPartTextField;
 
     @FXML
-    private Button searchPartBtn;
-
-    @FXML
     private TableView<Part> addPartsTableView;
 
     @FXML
@@ -65,9 +59,6 @@ public class Products implements Initializable {
     private TableColumn<Part, Double> partCostCol;
 
     @FXML
-    private Button addPartBtn;
-
-    @FXML
     private TableView<Part> productPartsTableView;
 
     @FXML
@@ -81,9 +72,6 @@ public class Products implements Initializable {
 
     @FXML
     private TableColumn<Part, Double> prodPartCostCol;
-
-    @FXML
-    private Button removePartBtn;
 
     private FilteredList<Part> partFilteredList;
 
@@ -112,13 +100,12 @@ public class Products implements Initializable {
         // set up search textField handlers (enter key)
         searchPartTextField.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER)  {
-                searchPart();
+                clickSearchPart(new ActionEvent());
             }
         });
     }
 
-    private void searchPart() {
-
+    public void clickSearchPart(ActionEvent actionEvent) {
         String newValue = searchPartTextField.getText();
 
         partFilteredList.setPredicate(part -> {
@@ -132,10 +119,6 @@ public class Products implements Initializable {
                 return true;
             } else return String.valueOf(part.getId()).contains(lowerCaseFilter);
         });
-    }
-
-    public void clickSearchPart(ActionEvent actionEvent) {
-        searchPart();
     }
 
     public void clickAddPart(ActionEvent actionEvent) {
@@ -192,13 +175,12 @@ public class Products implements Initializable {
         if(productParts.size() > 0){ // if product has at least one associated part
 
             Product theProduct = new Product(id, prodName, prodCost, prodInv, prodMin, prodMax);
-//            for (Part p : productParts){
-//                theProduct.addAssociatedPart(p);
-//            }
+            for (Part p : productParts){
+                theProduct.addAssociatedPart(p);
+            }
             saveProduct(theProduct);
+            Main.closeThisWindow(actionEvent);
 
-            Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            window.close();
         } else { // let the user know need at least one associated part
             Main.dialog(Alert.AlertType.INFORMATION, "No associated parts",
                     "A product must have at least one part",
@@ -211,10 +193,8 @@ public class Products implements Initializable {
                 "Cancel " + prodScreenLabel.getText(), "Confirm cancel",
                 "Are you sure you want to cancel?\n\n");
 
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            window.close();
-        }
+        if (result.isPresent() && result.get() == ButtonType.OK)
+            Main.closeThisWindow(actionEvent);
     }
 
 
