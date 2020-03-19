@@ -9,7 +9,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 
 import java.net.URL;
-import java.text.NumberFormat;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -181,27 +180,26 @@ public class Products implements Initializable {
     }
 
     public void clickSaveProd(ActionEvent actionEvent) {
+        
         // extract text from fields
         int id = Integer.parseInt(prodIDTextField.getText());
-
         String prodName = prodNameTextField.getText();
         double prodCost = Double.parseDouble(prodCostTextField.getText().isEmpty() ? "0" : prodCostTextField.getText());
         int prodInv = Integer.parseInt(prodInvTextField.getText().isEmpty() ? "0" : prodInvTextField.getText());
         int prodMin = Integer.parseInt(prodMinTextField.getText().isEmpty() ? "0" : prodMinTextField.getText());
         int prodMax = Integer.parseInt(prodMaxTextField.getText().isEmpty() ? "0" : prodMaxTextField.getText());
 
-        Product theProduct;
-        if(true && productParts.size() > 0){ // all input is valid and product has at least one associated part
+        if(productParts.size() > 0){ // if product has at least one associated part
 
-            theProduct = new Product(id, prodName, prodCost, prodInv, prodMin, prodMax);
-            for (Part p : productParts){
-                theProduct.addAssociatedPart(p);
-            }
+            Product theProduct = new Product(id, prodName, prodCost, prodInv, prodMin, prodMax);
+//            for (Part p : productParts){
+//                theProduct.addAssociatedPart(p);
+//            }
             saveProduct(theProduct);
 
             Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             window.close();
-        } else { // failed validation dialog box
+        } else { // let the user know need at least one associated part
             Main.dialog(Alert.AlertType.INFORMATION, "No associated parts",
                     "A product must have at least one part",
                     "Select at least one part to associate with a product");

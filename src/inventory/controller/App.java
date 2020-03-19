@@ -21,14 +21,7 @@ public class App extends Application {
 
     }
 
-
     public static void main(String[] args) {
         launch(args);
     }
 }
-
-
-// for product screen
-//  primaryStage.setMinHeight(500);
-
-//primaryStage.setResizable(false);// for add/modify part screens

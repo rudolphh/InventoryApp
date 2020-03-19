@@ -1,6 +1,5 @@
 package inventory.controller;
 
-
 import inventory.model.InHousePart;
 import inventory.model.Inventory;
 import inventory.model.OutsourcedPart;
@@ -14,7 +13,6 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class Parts implements Initializable {
@@ -140,7 +138,8 @@ public class Parts implements Initializable {
         String partMacCo = partMacCoTextField.getText();// machine IDs can only be 9 digits (limitation of int)
 
         Part thePart;
-        if(true){ // better input validation can go here
+
+        // better input validation can go here
             if(inHouseRadioBtn.isSelected()){
                 thePart = new InHousePart(id, partName, partCost, partInv, partMin, partMax,
                         Integer.parseInt(partMacCoTextField.getText().isEmpty() ? "0" : partMacCo.trim()));
@@ -150,9 +149,9 @@ public class Parts implements Initializable {
             savePart(thePart);
             Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             window.close();
-        } else { // validation failed dialog box
+        // else { // validation failed dialog box
 
-        }
+        //}
 
     }
 
