@@ -1,5 +1,6 @@
 package inventory.controller;
 
+
 import inventory.model.InHousePart;
 import inventory.model.Inventory;
 import inventory.model.OutsourcedPart;
@@ -132,35 +133,33 @@ public class Parts implements Initializable {
         int id = Integer.parseInt(partIDTextField.getText());
 
         String partName = partNameTextField.getText();
-        double partCost = Double.parseDouble(partCostTextField.getText());
-        int partInv = partInvTextField.getText().isEmpty() ? 0 : Integer.parseInt(partInvTextField.getText());
-        int partMin = Integer.parseInt(partMinTextField.getText());
-        int partMax = Integer.parseInt(partMaxTextField.getText());
+        double partCost = Double.parseDouble(partCostTextField.getText().isEmpty() ? "0" : partCostTextField.getText());
+        int partInv = Integer.parseInt(partInvTextField.getText().isEmpty() ? "0" : partInvTextField.getText());
+        int partMin = Integer.parseInt(partMinTextField.getText().isEmpty() ? "0" : partMinTextField.getText());
+        int partMax = Integer.parseInt(partMaxTextField.getText().isEmpty() ? "0" : partMaxTextField.getText());
         String partMacCo = partMacCoTextField.getText();// machine IDs can only be 9 digits (limitation of int)
 
         Part thePart;
-        if(true){ // all input is valid
+        if(true){ // better input validation can go here
             if(inHouseRadioBtn.isSelected()){
-                thePart = new InHousePart(id, partName, partCost, partInv, partMin, partMax, Integer.parseInt(partMacCo.trim()));
+                thePart = new InHousePart(id, partName, partCost, partInv, partMin, partMax,
+                        Integer.parseInt(partMacCoTextField.getText().isEmpty() ? "0" : partMacCo.trim()));
             } else {
                 thePart = new OutsourcedPart(id, partName, partCost, partInv, partMin, partMax, partMacCo.trim());
             }
             savePart(thePart);
             Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             window.close();
-        } else { //dialog box
+        } else { // validation failed dialog box
 
         }
 
     }
 
     public void clickCancelPart(ActionEvent actionEvent) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.initModality(Modality.APPLICATION_MODAL);
-        alert.setTitle("Cancel " + partScreenLabel.getText());
-        alert.setHeaderText("Confirm cancel");
-        alert.setContentText("Are you sure you want to cancel?\n\n");
-        Optional<ButtonType> result = alert.showAndWait();
+        Optional<ButtonType> result = Main.dialog(Alert.AlertType.CONFIRMATION,
+                "Cancel " + partScreenLabel.getText(), "Confirm cancel",
+                "Are you sure you want to cancel?\n\n");
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();

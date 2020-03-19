@@ -14,6 +14,7 @@ import javafx.fxml.Initializable;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.NumberFormat;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -93,28 +94,36 @@ public class Main implements Initializable {
     private Button exitBtn;
 
     private FilteredList<Part> partFilteredList;
+    private FilteredList<Product> prodFilteredList;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        Inventory.addPart(new InHousePart(1, "Transmission", 299.00, 10, 1, 20, 20383));
-        Inventory.addPart(new InHousePart(2, "brakes", 99.00, 5, 3, 30, 205653));
+        Inventory.addPart(new InHousePart(1, "Transmission", 299.18, 10, 1, 20, 20383));
+        Inventory.addPart(new InHousePart(2, "brakes", 99.03, 5, 3, 30, 205653));
+        Inventory.addPart(new InHousePart(3, "tire", 69.85, 20, 8, 40, 1849393));
 
-        //        System.out.println(Inventory.getAllParts().get(0).getName());
+        initializeColumns(partIDCol, partNameCol, partInvCol, partCostCol);
+        initializeColumns(prodIDCol, prodNameCol, prodInvCol, prodCostCol);
 
-        partIDCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-        partNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        partInvCol.setCellValueFactory(new PropertyValueFactory<>("inventory"));
-        partCostCol.setCellValueFactory(new PropertyValueFactory<>("price"));
 
         ObservableList<Part> allParts = Inventory.getAllParts();
         partsListTableView.setItems(allParts);
 
+        ObservableList<Product> allProducts = Inventory.getAllProducts();
+        productsListTableView.setItems(allProducts);
+
+
         // set up search functionality
-        partFilteredList = new FilteredList<>(allParts, b-> true);
+        partFilteredList = allParts.filtered(b-> true);
         SortedList<Part> sortedPartList = new SortedList<>(partFilteredList);
         sortedPartList.comparatorProperty().bind(partsListTableView.comparatorProperty());
         partsListTableView.setItems(sortedPartList);
+
+        prodFilteredList = allProducts.filtered(b-> true);
+        SortedList<Product> sortedProdList = new SortedList<>(prodFilteredList);
+        sortedProdList.comparatorProperty().bind(productsListTableView.comparatorProperty());
+        productsListTableView.setItems(sortedProdList);
 
         // set up search textField handlers (enter key)
         searchPartTextField.setOnKeyPressed(keyEvent -> {
@@ -132,11 +141,10 @@ public class Main implements Initializable {
         exitBtn.setCancelButton(true);
     }
 
-
     private void searchPart() {
 
         String newValue = searchPartTextField.getText();
-        System.out.println(newValue);
+
         partFilteredList.setPredicate(part -> {
 
             if(newValue == null || newValue.isEmpty()){
@@ -151,6 +159,19 @@ public class Main implements Initializable {
     }
 
     private void searchProduct() {
+        String newValue = searchProdTextField.getText();
+
+        prodFilteredList.setPredicate(part -> {
+
+            if(newValue == null || newValue.isEmpty()){
+                return true;
+            }
+
+            String lowerCaseFilter = newValue.toLowerCase();
+            if(part.getName().toLowerCase().contains(lowerCaseFilter)){
+                return true;
+            } else return String.valueOf(part.getId()).contains(lowerCaseFilter);
+        });
     }
 
 // Button Click Handlers for Main Screen (main.fxml)
@@ -168,9 +189,7 @@ public class Main implements Initializable {
         searchPart();
     }
 
-    @FXML
-    public void clickAddPart(ActionEvent actionEvent) {
-
+    public void loadPartScreen(Part thePart, String title, String screenLabel, String exceptionMsg){
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/part.fxml"));
             Parent theParent = loader.load();
@@ -178,17 +197,24 @@ public class Main implements Initializable {
 
             Stage newWindow = new Stage();
             newWindow.initModality(Modality.APPLICATION_MODAL);
-            newWindow.setTitle("Add Part to Inventory");
+            newWindow.setTitle(title);
             newWindow.setResizable(false);// for add/modify part screens
             newWindow.setScene(new Scene(theParent));
 
-            controller.initScreenLabel("Add Part");
+            controller.initScreenLabel(screenLabel);
+            controller.setPart(thePart);
             controller.initializeFieldData();
             newWindow.show();
         } catch (Exception e){
-            System.out.println("Cannot load add part window");
+            System.out.println(exceptionMsg);
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    public void clickAddPart(ActionEvent actionEvent) {
+        loadPartScreen(null, "Add Part to Inventory", "Add Part",
+                "Cannot load add part window");
     }
 
     public void clickModPart(ActionEvent actionEvent) {
@@ -196,31 +222,11 @@ public class Main implements Initializable {
         Part thePart = partsListTableView.getSelectionModel().getSelectedItem();
 
         if(thePart == null){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Select Part");
-            alert.setHeaderText("No part selected");
-            alert.setContentText("You must select a part to modify");
-            alert.showAndWait();
+            dialog(Alert.AlertType.INFORMATION, "Select Part", "No part selected",
+                    "You must select a part to modify");
         } else {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/part.fxml"));
-                Parent theParent = loader.load();
-                Parts controller = loader.getController();
-
-                Stage newWindow = new Stage();
-                newWindow.initModality(Modality.APPLICATION_MODAL);
-                newWindow.setTitle("Modify Product in Inventory");
-                newWindow.setResizable(false);// for add/modify part screens
-                newWindow.setScene(new Scene(theParent));
-
-                controller.initScreenLabel("Modify Part");
-                controller.setPart(thePart);
-                controller.initializeFieldData();
-                newWindow.show();
-            } catch (Exception e) {
-                System.out.println("Cannot load modify part window");
-                e.printStackTrace();
-            }
+            loadPartScreen(thePart, "Modify Product in Inventory", "Modify Part",
+                    "Cannot load modify part window");
         }
     }
 
@@ -229,21 +235,15 @@ public class Main implements Initializable {
         int selectedIndex = partsListTableView.getSelectionModel().getSelectedIndex();
 
         if(selectedIndex == -1){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Select Part");
-            alert.setHeaderText("No part selected");
-            alert.setContentText("You must select a part to delete");
-            alert.showAndWait();
+            dialog(Alert.AlertType.INFORMATION, "Select Part", "No part selected",
+                    "You must select a part to delete");
         }
         else {
             String partName = Inventory.getAllParts().get(selectedIndex).getName();
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.setTitle("Delete " + partName);
-            alert.setHeaderText("Confirm Delete - Part : " + partName);
-            alert.setContentText("Are you sure you want to delete " + partName + "?\n\n");
-            Optional<ButtonType> result = alert.showAndWait();
+            Optional<ButtonType> result = dialog(Alert.AlertType.CONFIRMATION, "Delete " + partName,
+                    "Confirm Delete - Part : " + partName,
+                    "Are you sure you want to delete " + partName + "?\n\n");
 
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 Inventory.deletePart(partsListTableView.getItems().get(selectedIndex));
@@ -254,72 +254,118 @@ public class Main implements Initializable {
 
     // Click Handlers for Product Buttons on Main Screen
     public void clickSearchProd(ActionEvent actionEvent) {
+        searchProduct();
+    }
 
+
+    private void loadProdScreen(Product theProduct, String title, String screenLabel, String exceptionMsg){
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/product.fxml"));
+            Parent theParent = loader.load();
+            Products controller = loader.getController();
+
+            Stage newWindow = new Stage();
+            newWindow.initModality(Modality.APPLICATION_MODAL);
+            newWindow.setTitle(title);
+            newWindow.setMinHeight(500);
+            newWindow.setMinWidth(996);
+            newWindow.setScene(new Scene(theParent));
+
+            controller.initScreenLabel(screenLabel);
+            controller.setProduct(theProduct);
+            controller.initializeFieldData();
+            newWindow.show();
+        } catch (Exception e){
+            System.out.println(exceptionMsg);
+            e.printStackTrace();
+        }
     }
 
     public void clickAddProd(ActionEvent actionEvent) {
 
-        try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/product.fxml"));
-            Parent theParent = loader.load();
-            Products controller = loader.getController();
-
-            Stage newWindow = new Stage();
-            newWindow.initModality(Modality.APPLICATION_MODAL);
-            newWindow.setTitle("Add Product to Inventory");
-            newWindow.setMinHeight(500);
-            newWindow.setMinWidth(996);
-            newWindow.setScene(new Scene(theParent));
-
-            controller.initScreenLabel("Create Product");
-            newWindow.show();
-        } catch (Exception e){
-            System.out.println("Cannot load add product window");
-        }
+        loadProdScreen(null,"Add Product to Inventory", "Add Product",
+                "Cannot load add product window");
     }
 
     public void clickModProd(ActionEvent actionEvent) {
 
-        try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/product.fxml"));
-            Parent theParent = loader.load();
-            Products controller = loader.getController();
+        Product theProduct = productsListTableView.getSelectionModel().getSelectedItem();
 
-            Stage newWindow = new Stage();
-            newWindow.setTitle("Modify Product in Inventory");
-            newWindow.setMinHeight(500);
-            newWindow.setMinWidth(996);
-            newWindow.setScene(new Scene(theParent));
-
-            controller.initScreenLabel("Modify Product");
-            newWindow.show();
-        } catch (Exception e){
-            System.out.println("Cannot load modify product window");
+        if(theProduct == null){
+            dialog(Alert.AlertType.INFORMATION, "Select Product", "No product selected",
+                    "You must select a product to modify");
+        } else {
+            loadProdScreen(theProduct, "Modify Product in Inventory", "Modify Product",
+                    "Cannot load modify product window");
         }
     }
 
     public void clickDelProd(ActionEvent actionEvent) {
+        Product selectedProd = productsListTableView.getSelectionModel().getSelectedItem();
+
+        if(selectedProd == null){
+            dialog(Alert.AlertType.INFORMATION, "Select Product", "No Product Selected",
+                    "You must select a product to delete");
+        }
+        else {
+            Optional<ButtonType> result = dialog(Alert.AlertType.CONFIRMATION, "Delete " + selectedProd.getName(),
+                    "Confirm Delete - Product : " + selectedProd.getName(),
+                    selectedProd.getName() + " has " + selectedProd.getAllAssociatedParts().size() +
+                            " associated part(s). \n\nAre you sure you want to delete this product ?\n\n");
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                Inventory.deleteProduct(selectedProd);
+            }
+        }
     }
 
     public void clickExit(ActionEvent actionEvent) {
-    }
-}
+        Optional<ButtonType> result = Main.dialog(Alert.AlertType.CONFIRMATION,
+                "Exit Inventory Management System" , "Confirm Exit Application",
+                "Are you sure you want to exit the application?\n\n");
 
-/*
-
-        try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/part.fxml"));
-            Parts controller = loader.getController();
-            controller.initScreenLabel("Modify Part");
-            Parent theParent = loader.load();
-            Stage newWindow = new Stage();
-            newWindow.initModality(Modality.APPLICATION_MODAL);
-            newWindow.setTitle("Modify Product in Inventory");
-            newWindow.setResizable(false);// for add/modify part screens
-            newWindow.setScene(new Scene(theParent));
-            newWindow.show();
-        } catch (Exception e){
-            System.out.println("Cannot load part window");
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            window.close();
         }
+    }
 
- */
+
+    // For use in other controllers
+    static <T> void initializeColumns(TableColumn<T, Integer> idCol, TableColumn<T, String> nameCol,
+                                      TableColumn<T, Integer> invCol, TableColumn<T, Double> costCol) {
+        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        invCol.setCellValueFactory(new PropertyValueFactory<>("inventory"));
+        costCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
+        costCol.setCellFactory(tc -> new TableCell<T, Double>() {
+
+            @Override
+            protected void updateItem(Double price, boolean empty) {
+                super.updateItem(price, empty);
+                if (empty) {
+                    setText(null);
+                } else {
+                    setText(currencyFormat.format(price));
+                }
+            }
+        });
+    }
+
+    static Optional<ButtonType> dialog(Alert.AlertType alertType, String title, String header, String content){
+        Alert alert = new Alert(alertType);
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        return alert.showAndWait();
+    }
+
+
+
+}// end Main
+
+

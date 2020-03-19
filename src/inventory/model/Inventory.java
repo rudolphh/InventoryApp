@@ -38,13 +38,13 @@ public class Inventory {
     public static ObservableList<Product> lookupProduct(String productName){ return null; }
 
     public static ObservableList<Part> getAllParts(){ return allParts; }
-    public static ObservableList<Product> getAllProducts(){ return null; }
+    public static ObservableList<Product> getAllProducts(){ return allProducts; }
 
     // update
     public static void updatePart(int index, Part selectedPart){
         allParts.set(index, selectedPart);
     }
-    public static void updateProduct(int index, Product selectedProduct){ }
+    public static void updateProduct(int index, Product selectedProduct){ allProducts.set(index, selectedProduct); }
 
     // delete
     public static boolean deletePart(Part selectedPart) {
@@ -52,9 +52,9 @@ public class Inventory {
         return true;
     }
 
-    public static boolean deleteProduct(Product selectedProduct){ return true; }
+    public static boolean deleteProduct(Product selectedProduct){
+        allProducts.remove(selectedProduct);
+        return true;
+    }
 
-
-    // helpers
-    public static int totalParts(){ return allParts.size(); }
 }

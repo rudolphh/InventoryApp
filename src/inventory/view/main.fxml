@@ -1,134 +1,190 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
-<AnchorPane minHeight="500.0" minWidth="980.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.controller.Main">
-   
-      <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         
-            <Label text="Inventory Management System">
-               <font>
-                  <Font name="System Bold Italic" size="16.0" />
-               </font>
-               <VBox.margin>
-                  <Insets left="30.0" right="30.0" top="30.0" />
-               </VBox.margin>
-            </Label>
-            <HBox VBox.vgrow="ALWAYS">
-               <VBox.margin>
-                  <Insets bottom="25.0" left="20.0" right="20.0" top="25.0" />
-               </VBox.margin>
-               
-                  <VBox minHeight="200.0" minWidth="460.0" style="-fx-border-color: #a9a9a9; -fx-border-radius: 5;" HBox.hgrow="ALWAYS">
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                     
-                        <HBox alignment="CENTER_LEFT">
-                           
-                              <Label text="Parts">
-                                 <padding>
-                                    <Insets left="20.0" />
-                                 </padding>
-                                 <font>
-                                    <Font name="System Bold" size="13.0" />
-                                 </font>
-                              </Label>
-                              <Region HBox.hgrow="ALWAYS" />
-                              <TextField id="searchPartsTextField" fx:id="searchPartTextField" alignment="CENTER_RIGHT" promptText="id or name">
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                              </TextField>
-                              <Button id="searchPartsBtn" fx:id="searchPartBtn" minWidth="80.0" mnemonicParsing="false" onAction="#clickSearchPart" style="-fx-background-color: black;" text="Search" textAlignment="RIGHT" textFill="WHITE" />
-                           
-                        </HBox>
-                        <TableView fx:id="partsListTableView" VBox.vgrow="ALWAYS">
-                           <columns>
-                              <TableColumn id="col_partID" fx:id="partIDCol" maxWidth="312.0" minWidth="115.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Part ID" />
-                              <TableColumn id="col_partName" fx:id="partNameCol" maxWidth="312.0" minWidth="116.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Name" />
-                              <TableColumn id="col_partInventory" fx:id="partInvCol" maxWidth="312.0" minWidth="116.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Inventory" />
-                              <TableColumn id="col_partCost" fx:id="partCostCol" maxWidth="312.0" minWidth="116.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Cost / Unit" />
-                           </columns>
-                           <columnResizePolicy>
-                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                           </columnResizePolicy>
-                        </TableView>
-                        <HBox alignment="CENTER_LEFT" spacing="5.0">
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
-                           <padding>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                           </padding>
-                           
-                              <Button id="partAddBtn" fx:id="partAddBtn" minWidth="80.0" mnemonicParsing="false" onAction="#clickAddPart" style="-fx-background-color: black;" text="Add" textFill="WHITE" />
-                              <Button id="partModBtn" fx:id="partModBtn" minWidth="80.0" mnemonicParsing="false" onAction="#clickModPart" style="-fx-background-color: black;" text="Modify" textFill="WHITE" />
-                              <Region HBox.hgrow="ALWAYS" />
-                              <Button id="partDelBtn" fx:id="partDelBtn" minWidth="80.0" mnemonicParsing="false" onAction="#clickDelPart" style="-fx-background-color: black;" text="Delete" textFill="WHITE" />
-                           
-                        </HBox>
-                     
-                  </VBox>
-                  <Region maxWidth="20.0" minWidth="20.0" HBox.hgrow="ALWAYS" />
-                  <VBox minHeight="200.0" minWidth="460.0" style="-fx-border-color: #a9a9a9; -fx-border-radius: 5;" HBox.hgrow="ALWAYS">
-                     
-                        <HBox alignment="CENTER_LEFT">
-                           
-                              <Label text="Products">
-                                 <padding>
-                                    <Insets left="20.0" />
-                                 </padding>
-                                 <font>
-                                    <Font name="System Bold" size="13.0" />
-                                 </font>
-                              </Label>
-                              <Region HBox.hgrow="ALWAYS" />
-                              <TextField id="searchProdTextField" fx:id="searchProdTextField" alignment="CENTER_RIGHT" promptText="id or name">
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                              </TextField>
-                              <Button id="searchProdBtn" fx:id="searchProdBtn" minWidth="80.0" mnemonicParsing="false" onAction="#clickSearchProd" style="-fx-background-color: black;" text="Search" textAlignment="RIGHT" textFill="WHITE" />
-                           
-                        </HBox>
-                        <TableView fx:id="productsListTableView" VBox.vgrow="ALWAYS">
-                           <columns>
-                              <TableColumn id="col_prodID" maxWidth="312.0" minWidth="116.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Product ID" />
-                              <TableColumn id="col_prodName" maxWidth="312.0" minWidth="116.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Name" />
-                              <TableColumn id="col_prodInventory" maxWidth="312.0" minWidth="116.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Inventory" />
-                              <TableColumn id="col_prodCost" maxWidth="312.0" minWidth="116.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Cost / Unit" />
-                           </columns>
-                           <columnResizePolicy>
-                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                           </columnResizePolicy>
-                        </TableView>
-                        <HBox alignment="CENTER_LEFT" spacing="5.0">
-                           <padding>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                           </padding>
-                           
-                              <Button id="prodAddBtn" fx:id="prodAddBtn" minWidth="80.0" mnemonicParsing="false" onAction="#clickAddProd" style="-fx-background-color: black;" text="Add" textFill="WHITE" />
-                              <Button id="prodModBtn" fx:id="prodModBtn" minWidth="80.0" mnemonicParsing="false" onAction="#clickModProd" style="-fx-background-color: black;" text="Modify" textFill="WHITE" />
-                              <Region HBox.hgrow="ALWAYS" />
-                              <Button id="prodDelBtn" fx:id="prodDelBtn" minWidth="80.0" mnemonicParsing="false" onAction="#clickDelProd" style="-fx-background-color: black;" text="Delete" textFill="WHITE" />
-                           
-                        </HBox>
-                     
-                  </VBox>
-               
-            </HBox>
-            <HBox alignment="CENTER_RIGHT">
-               <padding>
-                  <Insets bottom="20.0" right="25.0" />
-               </padding>
-               
-                  <Button id="exitBtn" fx:id="exitBtn" minWidth="80.0" mnemonicParsing="false" onAction="#clickExit" text="Exit" />
-               
-            </HBox>
-         
-      </VBox>
-   
+
+<AnchorPane minHeight="500.0" minWidth="980.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="inventory.controller.Main">
+
+
+    <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+          AnchorPane.topAnchor="0.0">
+
+
+        <Label text="Inventory Management System">
+            <font>
+                <Font name="System Bold Italic" size="16.0"/>
+            </font>
+            <VBox.margin>
+                <Insets left="30.0" right="30.0" top="30.0"/>
+            </VBox.margin>
+        </Label>
+        <HBox VBox.vgrow="ALWAYS">
+            <VBox.margin>
+                <Insets bottom="25.0" left="20.0" right="20.0" top="25.0"/>
+            </VBox.margin>
+
+
+            <VBox minHeight="200.0" minWidth="460.0" style="-fx-border-color: #a9a9a9; -fx-border-radius: 5;"
+                  HBox.hgrow="ALWAYS">
+                <HBox.margin>
+                    <Insets/>
+                </HBox.margin>
+
+
+                <HBox alignment="CENTER_LEFT">
+
+
+                    <Label text="Parts">
+                        <padding>
+                            <Insets left="20.0"/>
+                        </padding>
+                        <font>
+                            <Font name="System Bold" size="13.0"/>
+                        </font>
+                        <HBox.margin>
+                            <Insets top="2.0"/>
+                        </HBox.margin>
+                    </Label>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <TextField id="searchPartsTextField" fx:id="searchPartTextField" alignment="CENTER_RIGHT"
+                               promptText="id or name">
+                        <HBox.margin>
+                            <Insets/>
+                        </HBox.margin>
+                    </TextField>
+                    <Button id="searchPartsBtn" fx:id="searchPartBtn" minWidth="80.0" mnemonicParsing="false"
+                            onAction="#clickSearchPart" style="-fx-background-color: black;" text="Search"
+                            textAlignment="RIGHT" textFill="WHITE"/>
+
+
+                </HBox>
+                <TableView fx:id="partsListTableView" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn id="col_partID" fx:id="partIDCol" maxWidth="312.0" minWidth="115.0"
+                                     prefWidth="-1.0" style="-fx-alignment: center;" text="Part ID"/>
+                        <TableColumn id="col_partName" fx:id="partNameCol" maxWidth="312.0" minWidth="116.0"
+                                     prefWidth="-1.0" style="-fx-alignment: center;" text="Name"/>
+                        <TableColumn id="col_partInventory" fx:id="partInvCol" maxWidth="312.0" minWidth="116.0"
+                                     prefWidth="-1.0" style="-fx-alignment: center;" text="Inventory"/>
+                        <TableColumn id="col_partCost" fx:id="partCostCol" maxWidth="312.0" minWidth="116.0"
+                                     prefWidth="-1.0" style="-fx-alignment: center;" text="Cost / Unit"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                </TableView>
+                <HBox alignment="CENTER_LEFT" spacing="5.0">
+                    <VBox.margin>
+                        <Insets/>
+                    </VBox.margin>
+                    <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </padding>
+
+
+                    <Button id="partAddBtn" fx:id="partAddBtn" minWidth="80.0" mnemonicParsing="false"
+                            onAction="#clickAddPart" style="-fx-background-color: black;" text="Add" textFill="WHITE"/>
+                    <Button id="partModBtn" fx:id="partModBtn" minWidth="80.0" mnemonicParsing="false"
+                            onAction="#clickModPart" style="-fx-background-color: black;" text="Modify"
+                            textFill="WHITE"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button id="partDelBtn" fx:id="partDelBtn" minWidth="80.0" mnemonicParsing="false"
+                            onAction="#clickDelPart" style="-fx-background-color: black;" text="Delete"
+                            textFill="WHITE"/>
+
+
+                </HBox>
+
+
+            </VBox>
+            <Region maxWidth="20.0" minWidth="20.0" HBox.hgrow="ALWAYS"/>
+            <VBox minHeight="200.0" minWidth="460.0" style="-fx-border-color: #a9a9a9; -fx-border-radius: 5;"
+                  HBox.hgrow="ALWAYS">
+
+
+                <HBox alignment="CENTER_LEFT">
+
+
+                    <Label text="Products">
+                        <padding>
+                            <Insets left="20.0"/>
+                        </padding>
+                        <font>
+                            <Font name="System Bold" size="13.0"/>
+                        </font>
+                        <HBox.margin>
+                            <Insets top="2.0"/>
+                        </HBox.margin>
+                    </Label>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <TextField id="searchProdTextField" fx:id="searchProdTextField" alignment="CENTER_RIGHT"
+                               promptText="id or name">
+                        <HBox.margin>
+                            <Insets/>
+                        </HBox.margin>
+                    </TextField>
+                    <Button id="searchProdBtn" fx:id="searchProdBtn" minWidth="80.0" mnemonicParsing="false"
+                            onAction="#clickSearchProd" style="-fx-background-color: black;" text="Search"
+                            textAlignment="RIGHT" textFill="WHITE"/>
+
+
+                </HBox>
+                <TableView fx:id="productsListTableView" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn id="col_prodID" fx:id="prodIDCol" maxWidth="312.0" minWidth="116.0"
+                                     prefWidth="-1.0" style="-fx-alignment: center;" text="Product ID"/>
+                        <TableColumn id="col_prodName" fx:id="prodNameCol" maxWidth="312.0" minWidth="116.0"
+                                     prefWidth="-1.0" style="-fx-alignment: center;" text="Name"/>
+                        <TableColumn id="col_prodInventory" fx:id="prodInvCol" maxWidth="312.0" minWidth="116.0"
+                                     prefWidth="-1.0" style="-fx-alignment: center;" text="Inventory"/>
+                        <TableColumn id="col_prodCost" fx:id="prodCostCol" maxWidth="312.0" minWidth="116.0"
+                                     prefWidth="-1.0" style="-fx-alignment: center;" text="Cost / Unit"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                </TableView>
+                <HBox alignment="CENTER_LEFT" spacing="5.0">
+                    <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </padding>
+
+
+                    <Button id="prodAddBtn" fx:id="prodAddBtn" minWidth="80.0" mnemonicParsing="false"
+                            onAction="#clickAddProd" style="-fx-background-color: black;" text="Add" textFill="WHITE"/>
+                    <Button id="prodModBtn" fx:id="prodModBtn" minWidth="80.0" mnemonicParsing="false"
+                            onAction="#clickModProd" style="-fx-background-color: black;" text="Modify"
+                            textFill="WHITE"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button id="prodDelBtn" fx:id="prodDelBtn" minWidth="80.0" mnemonicParsing="false"
+                            onAction="#clickDelProd" style="-fx-background-color: black;" text="Delete"
+                            textFill="WHITE"/>
+
+
+                </HBox>
+
+
+            </VBox>
+
+
+        </HBox>
+        <HBox alignment="CENTER_RIGHT">
+            <padding>
+                <Insets bottom="20.0" right="25.0"/>
+            </padding>
+
+
+            <Button id="exitBtn" fx:id="exitBtn" minWidth="80.0" mnemonicParsing="false" onAction="#clickExit"
+                    text="Exit"/>
+
+
+        </HBox>
+
+
+    </VBox>
+
+
 </AnchorPane>
