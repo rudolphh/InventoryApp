@@ -1,4 +1,4 @@
-package inventory.controller;
+package inventory;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -12,7 +12,7 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception{
 
         //System.out.println("javafx.runtime.version: " + System.getProperty("javafx.runtime.version"));
-        Parent root = FXMLLoader.load(getClass().getResource("../view/main.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/inventory/view/main.fxml"));
         primaryStage.setTitle("Inventory Management System");
         primaryStage.setMinHeight(420);// 420 for main
         primaryStage.setMinWidth(996);

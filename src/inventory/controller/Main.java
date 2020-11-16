@@ -75,9 +75,12 @@ public class Main implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        Inventory.addPart(new InHousePart(1, "Transmission", 299.18, 10, 1, 20, 20383));
-        Inventory.addPart(new InHousePart(2, "brakes", 99.03, 5, 3, 30, 205653));
-        Inventory.addPart(new InHousePart(3, "tire", 69.85, 20, 8, 40, 1849393));
+        Inventory.addPart(new InHousePart(1, "Transmission",
+                299.18, 10, 1, 20, 20383));
+        Inventory.addPart(new InHousePart(2, "brakes",
+                99.03, 5, 3, 30, 205653));
+        Inventory.addPart(new InHousePart(3, "tire",
+                69.85, 20, 8, 40, 1849393));
 
         initializeColumns(partIDCol, partNameCol, partInvCol, partCostCol);
         initializeColumns(prodIDCol, prodNameCol, prodInvCol, prodCostCol);
@@ -120,7 +123,7 @@ public class Main implements Initializable {
 
     public void loadPartScreen(Part thePart, String title, String screenLabel, String exceptionMsg){
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/part.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/inventory/view/part.fxml"));
             Parent theParent = loader.load();
             Parts controller = loader.getController();
 
@@ -143,7 +146,7 @@ public class Main implements Initializable {
     private void loadProdScreen(Product theProduct, String title, String screenLabel, String exceptionMsg){
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/product.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/inventory/view/product.fxml"));
             Parent theParent = loader.load();
             Products controller = loader.getController();
 

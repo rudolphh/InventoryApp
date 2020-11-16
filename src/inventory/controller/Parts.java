@@ -65,35 +65,6 @@ public class Parts implements Initializable {
         partCancelBtn.setCancelButton(true);// fire button when 'esc' is pressed
     }
 
-    void initializeFieldData(){
-
-        if (selectedPart == null) {
-            partIDTextField.setText(Integer.toString(Inventory.getCurrentPartID()));
-        } else {
-            ObservableList<Part> theList = Inventory.getAllParts();
-            this.selectedPartInventoryIndex = theList.indexOf(selectedPart);
-
-            partIDTextField.setText(Integer.toString(selectedPart.getId()));
-            partNameTextField.setText(selectedPart.getName());
-            partInvTextField.setText(Integer.toString(selectedPart.getInventory()));
-            partCostTextField.setText(Double.toString(selectedPart.getPrice()));
-            partMinTextField.setText(Integer.toString(selectedPart.getMin()));
-            partMaxTextField.setText(Integer.toString(selectedPart.getMax()));
-
-            if(selectedPart instanceof InHousePart){
-                inHouseRadioBtn.setSelected(true);
-                partMacCoLabel.setText("Machine ID");
-                partMacCoTextField.setPromptText("Machine Identifier");
-                partMacCoTextField.setText(Integer.toString(((InHousePart) selectedPart).getMachineID()));
-            } else if (selectedPart instanceof OutsourcedPart){
-                outsourcedRadioBtn.setSelected(true);
-                partMacCoLabel.setText("Company");
-                partMacCoTextField.setPromptText("Company Name");
-                partMacCoTextField.setText(((OutsourcedPart) selectedPart).getCompanyName());
-            }
-        }
-    }
-
     /***
      * Save a part to the inventory (added or modified).
      * @param thePart the part to be added or modified
@@ -169,5 +140,35 @@ public class Parts implements Initializable {
     void setPart(Part thePart) {
         this.selectedPart = thePart;
     }
+
+    void initializeFieldData(){
+
+        if (selectedPart == null) {
+            partIDTextField.setText(Integer.toString(Inventory.getCurrentPartID()));
+        } else {
+            ObservableList<Part> theList = Inventory.getAllParts();
+            this.selectedPartInventoryIndex = theList.indexOf(selectedPart);
+
+            partIDTextField.setText(Integer.toString(selectedPart.getId()));
+            partNameTextField.setText(selectedPart.getName());
+            partInvTextField.setText(Integer.toString(selectedPart.getInventory()));
+            partCostTextField.setText(Double.toString(selectedPart.getPrice()));
+            partMinTextField.setText(Integer.toString(selectedPart.getMin()));
+            partMaxTextField.setText(Integer.toString(selectedPart.getMax()));
+
+            if(selectedPart instanceof InHousePart){
+                inHouseRadioBtn.setSelected(true);
+                partMacCoLabel.setText("Machine ID");
+                partMacCoTextField.setPromptText("Machine Identifier");
+                partMacCoTextField.setText(Integer.toString(((InHousePart) selectedPart).getMachineID()));
+            } else if (selectedPart instanceof OutsourcedPart){
+                outsourcedRadioBtn.setSelected(true);
+                partMacCoLabel.setText("Company");
+                partMacCoTextField.setPromptText("Company Name");
+                partMacCoTextField.setText(((OutsourcedPart) selectedPart).getCompanyName());
+            }
+        }
+    }
+    
 }// end Parts.java
 
